@@ -23,8 +23,10 @@ def hello_to_you():
 
 @app.route('/movie/<name>')
 def movie_title(name):
-	kev = requests.get('https://itunes.apple.com/search?term=' + name + '&limit=25&entity=movie').text
-	return kev
+	kev = requests.get('https://itunes.apple.com/search?term=' + name + '&limit=25&entity=movie')
+	final = kev.text
+	return final
+
 
 @app.route('/question')
 def form_number():
@@ -34,7 +36,7 @@ def form_number():
 	<form
 		action = "/result" method = "POST">
 		<label for = "number"> Enter your favorite number:</label><br>
-		<br>
+	<br><br>
 		<input type = "text" name = "number"></input>
 		<input type = "submit" name = "Submit"></input>
 	</form>
@@ -43,55 +45,50 @@ def form_number():
 	'''
 	return kevin
 
+
 @app.route('/result', methods = ['GET', 'POST'])
 def result():
 	if request.method == "POST":
-		num = request.form.get("number", "Did not recieve a value for favorite number")
-		print (type(num))
+		num = request.form.get("number", "Error...no data")
 		kevin_i = int(num)
-		double = str(kevin_i*2)
-		return "Double your favorite number is " + double
+		result_num = kevin_i * 2
+		return "Double your favorite number is " + str(result_num)
 
-@app.route('/problem4form', methods = ['GET', 'POST'])
-def kevin():
-	formstring = """<br><br>
-	<form action ="" method = 'POST'>
-	<input type = "text" name = "TVshow"> Enter your favorite TV Show:
-	<br><br>
-	<legend> how many results do you want to search for</legend>
-	<input type = "checkbox" name = "numbers" value = "1"> 1<br>
-	<input type = "checkbox" name = "numbers" value = "3"> 3<br>
-	<input type = "checkbox" name = "numbers" value = "5"> 5<br>
-	<input type = "checkbox" name = "numbers" value = "10"> 10<br>
-<input type = "submit" value = "Submit">	
+
+@app.route('/problem4form',methods=["GET","POST"])
+def see_form():
+    problemhtml = """<br><br>
+    <form action="" method='POST'>
+		<input type="text" name="name"> Enter a your favorite author
+		<br><br>
+		<legend> pick how many results you want to search for</legend>
+		<input type="checkbox" name="num_results" value="3"> 3<br>
+  		<input type="checkbox" name="num_results" value="7"> 7<br>
+  		<input type="checkbox" name="num_results" value="10"> 10<br>
+  		<input type="checkbox" name="num_results" value="15"> 15<br>
+<input type="submit" value="Submit">
 </form>
-"""
-	if request.method == 'POST':
-		tv_show = request.form.get('TVshow','')
-		numbers = request.form.get('numbers')
-		baseurl = 'https://itunes.apple.com/search?'
-		params = {}
-		params['term'] = tv_show
-		params['limit'] = numbers
-		request = requests.get(baseurl, params = params)
-		load = json.loads(request.text)
-		text = '<h1> this is ' + numbers + ' results based on your search term of ' + tv_show +'</h1><br><br>' 
+""" 
+## HINT: In there ^ is where you need to add a little bit to the code...
+    if request.method == "POST":
+        name = request.values.get('name')
+        num_results = request.values.get('num_results')
+        cheese = requests.get('https://itunes.apple.com/search?', params={'term':name, 'limit':num_results,'entity':'ebook'}).text
+        ressy = json.loads(cheese)
+        txt = '<h1> Here are the ' + num_results + ' results from your search on ' + name +'</h1><br><br>'
+        #number_results = res['resultCount']
 
-		for cheese in load['results']:
-			name = cheese['trackname']
-			details = cheese['description']
-			formatting = 'TV Show: {} <br><br> Details: {}'.format(name, details)
-			text += formating
-		return formstring + text
-	else:
-		return formstring
+        for kevin in ressy['results']:
+        	title = kevin['trackName']
+        	descript = kevin['description']
+        	words = 'Title: {} <br><br> Description: {}'.format(title, descript)
+        	txt += words
+        return problemhtml + txt
 
 
-
-
-
-
-
+    #     # Add more code here so that when someone enters a phrase, you see their data (somehow) AND the form!
+    else:
+        return problemhtml
 
 if __name__ == '__main__':
     app.run()
