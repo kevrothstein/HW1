@@ -52,93 +52,39 @@ def result():
 		double = str(kevin_i*2)
 		return "Double your favorite number is " + double
 
-#@app.route('/problem4form', methods = ['GET', 'POST'])
-#def kevin():
-	#formstring = """<br><br>
-	#<form action ="" method = 'POST'>
-	#<input type = "text" name = "TVshow"> Enter your favorite TV Show:
-	#<br><br>
-	#<legend> how many results do you want to search for</legend>
-	#<input type = "checkbox" name = "numbers" value = "1"> 1<br>
-	#<input type = "checkbox" name = "numbers" value = "3"> 3<br>
-	#<input type = "checkbox" name = "numbers" value = "5"> 5<br>
-	#<input type = "checkbox" name = "numbers" value = "10"> 10<br>
-#<input type = "submit" value = "Submit">	
-#</form>
-#"""
-	#if request.method == 'POST':
-		#tv_show = request.form.get('TVshow','')
-		#numbers = request.form.get('numbers')
-		#baseurl = 'https://itunes.apple.com/search?'
-		#params = {}
-		#params['term'] = tv_show
-		#params['limit'] = numbers
-		#request = requests.get(baseurl, params = params)
-		#load = json.loads(request.text)
-		#text = '<h1> this is ' + numbers + ' results based on your search term of ' + tv_show +'</h1><br><br>' 
-
-		#for cheese in load['results']:
-			#name = cheese['trackname']
-			#details = cheese['description']
-			#formatting = 'TV Show: {} <br><br> Details: {}'.format(name, details)
-			#text += formating
-		#return formstring + text
-	#else:
-		#return formstring
-
-
-
-@app.route('/problem4form',methods=["GET","POST"])
-def see_form():
+@app.route('/problem4form', methods = ['GET', 'POST'])
+def kevin():
 	formstring = """<br><br>
-	<form action="" method='POST'>
-	<input type="text" name="author"> Enter a your favorite author
+	<form action ="" method = 'POST'>
+	<input type = "text" name = "TVshow"> Enter your favorite TV Show:
 	<br><br>
-	<legend> pick how many results you want to search for</legend>
-	<input type="checkbox" name="num_results" value="1"> 1<br>
-	<input type="checkbox" name="num_results" value="5"> 5<br>
-	<input type="checkbox" name="num_results" value="10"> 10<br>
-<input type="submit" value="Submit">
+	<legend> how many results do you want to search for</legend>
+	<input type = "checkbox" name = "numbers" value = "1"> 1<br>
+	<input type = "checkbox" name = "numbers" value = "3"> 3<br>
+	<input type = "checkbox" name = "numbers" value = "5"> 5<br>
+	<input type = "checkbox" name = "numbers" value = "10"> 10<br>
+<input type = "submit" value = "Submit">	
 </form>
 """
+	if request.method == 'POST':
+		tv_show = request.form.get('TVshow','')
+		numbers = request.form.get('numbers')
+		baseurl = 'https://itunes.apple.com/search?'
+		params = {}
+		params['term'] = tv_show
+		params['limit'] = numbers
+		request = requests.get(baseurl, params = params)
+		load = json.loads(request.text)
+		text = '<h1> this is ' + numbers + ' results based on your search term of ' + tv_show +'</h1><br><br>' 
 
-	if request.method == "POST":
-		author = request.values.get('author')
-		num_results = request.values.get('num_results')
-		humes = requests.get('https://itunes.apple.com/search?', params={'term':author, 'limit':num_results,'entity':'ebook'}).text
-		resy = json.loads(humes)
-		text = '<h1> Here are ' + num_results + ' based on your search of ' + author +'</h1><br><br>'
-
-	for x in resy['results']:
-		title = x['trackName']
-		description = x['description']
-		string = 'Title: {} <br><br> Description: {}'.format(title, description)
-		text += string
+		for cheese in load['results']:
+			name = cheese['trackname']
+			details = cheese['description']
+			formatting = 'TV Show: {} <br><br> Details: {}'.format(name, details)
+			text += formating
 		return formstring + text
 	else:
 		return formstring
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
 
 
 
